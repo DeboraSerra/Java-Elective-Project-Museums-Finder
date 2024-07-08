@@ -30,26 +30,41 @@ public class CollectionTypeControllerTest {
   MockMvc mock;
 
   @Test
-  void testCollectionTypesCountOK() throws Exception {
+  void testCollectionTypesCountOKMoreItems() throws Exception {
     CollectionTypeCount collectionCount = MockTypes.foundCollections;
     Mockito.when(service.countByCollectionTypes(any())).thenReturn(collectionCount);
 
     ResultActions result = mock.perform(get("/collections/count/hist,imag"));
 
     result.andExpect(status().isOk())
+        .andExpect(jsonPath("$.collectionTypes").isArray())
         .andExpect(jsonPath("$.count").value(collectionCount.count()));
 
-    Mockito.verify(service).countByCollectionTypes(any());
+    Mockito.verify(service).countByCollectionTypes("hist,imag");
+  }
+
+  @Test
+  void testCollectionTypesCountOKOneItem() throws Exception {
+    CollectionTypeCount collectionCount = MockTypes.foundOneCollection;
+    Mockito.when(service.countByCollectionTypes(any())).thenReturn(collectionCount);
+
+    ResultActions result = mock.perform(get("/collections/count/hist"));
+
+    result.andExpect(status().isOk())
+        .andExpect(jsonPath("$.collectionTypes").isArray())
+        .andExpect(jsonPath("$.count").value(collectionCount.count()));
+
+    Mockito.verify(service).countByCollectionTypes("hist");
   }
 
   @Test
   void testCollectionTypesCountNotFound() throws Exception {
     CollectionTypeCount collectionCount = MockTypes.notFoundCollections;
-    Mockito.when(service.countByCollectionTypes(any())).thenReturn(collectionCount);
+    Mockito.when(service.countByCollectionTypes("imag")).thenReturn(collectionCount);
 
-    ResultActions result = mock.perform(get("/collections/count/hist,imag"));
+    ResultActions result = mock.perform(get("/collections/count/imag"));
 
     result.andExpect(status().isNotFound());
-    Mockito.verify(service).countByCollectionTypes(any());
+    Mockito.verify(service).countByCollectionTypes("imag");
   }
 }
