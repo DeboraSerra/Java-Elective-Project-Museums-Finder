@@ -18,7 +18,7 @@ public class MuseumService implements MuseumServiceInterface {
     MuseumFakeDatabase db;
 
     @Autowired
-    public void MuseumService(MuseumFakeDatabase database) {
+    public MuseumService(MuseumFakeDatabase database) {
         db = database;
     }
 
