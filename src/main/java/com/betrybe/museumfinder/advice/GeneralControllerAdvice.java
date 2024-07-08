@@ -38,7 +38,7 @@ public class GeneralControllerAdvice {
    *
    * @return the response entity
    */
-  @ExceptionHandler(Exception.class)
+  @ExceptionHandler({RuntimeException.class, Exception.class, Throwable.class})
   public ResponseEntity<String> handleGeneric() {
     return ResponseEntity.status(500).body("Erro interno!");
   }

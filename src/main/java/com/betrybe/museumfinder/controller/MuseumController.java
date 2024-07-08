@@ -44,10 +44,12 @@ public class MuseumController {
    * @param museum the museum
    * @return the response entity
    */
-  @PostMapping("/")
+  @PostMapping
   public ResponseEntity<MuseumDto> postMuseum(@RequestBody MuseumCreationDto museum) {
+    System.out.println(museum);
     Museum result = service.createMuseum(ModelDtoConverter.dtoToModel(museum));
     MuseumDto response = ModelDtoConverter.modelToDto(result);
+    System.out.println(response);
     return ResponseEntity.status(HttpStatus.CREATED).body(response);
   }
 
