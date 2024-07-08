@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -62,10 +63,23 @@ public class MuseumController {
    * @return the closest museum
    */
   @GetMapping("/closest")
-  public ResponseEntity<MuseumDto> getClosestMuseum(@RequestParam String lat,
-      @RequestParam String lng, @RequestParam(name = "max_dist_km") String distance) {
-    Coordinate coordinate = new Coordinate(Double.parseDouble(lat), Double.parseDouble(lng));
-    Museum museum = service.getClosestMuseum(coordinate, Double.parseDouble(distance));
+  public ResponseEntity<MuseumDto> getClosestMuseum(@RequestParam double lat,
+      @RequestParam double lng, @RequestParam(name = "max_dist_km") double distance) {
+    Coordinate coordinate = new Coordinate(lat, lng);
+    Museum museum = service.getClosestMuseum(coordinate, distance);
+    MuseumDto response = ModelDtoConverter.modelToDto(museum);
+    return ResponseEntity.ok(response);
+  }
+
+  /**
+   * Gets museum by id.
+   *
+   * @param id the id
+   * @return the museum by id
+   */
+  @GetMapping("/{id}")
+  public ResponseEntity<MuseumDto> getMuseumById(@PathVariable Long id) {
+    Museum museum = service.getMuseum(id);
     MuseumDto response = ModelDtoConverter.modelToDto(museum);
     return ResponseEntity.ok(response);
   }
